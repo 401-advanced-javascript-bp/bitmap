@@ -7,6 +7,7 @@ const fs = require('fs');
  * @param filePath
  * @constructor
  */
+
 function Bitmap(filePath) {
   this.file = filePath;
 }
@@ -19,16 +20,20 @@ Bitmap.prototype.parse = function(buffer) {
   this.buffer = buffer;
   this.type = buffer.toString('utf-8', 0, 2);
   //... and so on
+  // console.log(`This represents buffer on Bitmap.parse: ${this.buffer}`); broken
 };
 
 /**
  * Transform a bitmap using some set of rules. The operation points to some function, which will operate on a bitmap instance
  * @param operation
  */
+//operation === 'invert' || 'greyscale';
 Bitmap.prototype.transform = function(operation) {
   // This is really assumptive and unsafe
   transforms[operation](this);
-  this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`);
+//transforms['invert']
+//resolves to doTheInversion(this);
+  this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`); //finds the text 'bmp' and replaces it with the second parameter. This is not a string AND the . is not included, so I assume this is meant to point to the bmp variable. I may be wrong.
 };
 
 /**
@@ -40,8 +45,29 @@ Bitmap.prototype.transform = function(operation) {
 const transformGreyscale = (bmp) => {
 
   console.log('Transforming bitmap into greyscale', bmp);
+  //currently bmp is an object with file, buffer, and type properties
 
-  //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
+  //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it. //How?
+  var keys = Object.keys(bmp);
+  // for (let) i = 0; i < keys.length; i++){
+  //   let val = bmp[keys[i]];
+  // }
+  var bufferKeys = Object.keys(bmp.buffer);
+
+  console.log('Exposing keys on bmp object:', keys);
+  console.log('Exposing typeof for bmp file property:', (typeof bmp.file) );
+  // console.log('Exposing typeof for bmp file property:', (typeof bmp[keys[0]]) );
+  console.log('Exposing typeof for bmp buffer property:', (typeof bmp.buffer) );
+  // console.log('Exposing typeof for bmp buffer property:', (typeof bmp[keys[1]]) );
+  console.log('Exposing typeof for bmp type property:', (typeof bmp.type) );
+  // console.log('Exposing typeof for bmp type property:', (typeof bmp[keys[2]]) );
+
+  console.log('Exposing keys on bmp.buffer object:', bufferKeys);
+  console.log('Exposing typeof for keys on bmp.buffer:*', (typeof bufferKeys) );
+  console.log('Exposing typeof for first key on bmp.buffer:**', (typeof bmp.buffer[bufferKeys[0]]) );
+  console.log('Exposing value for first bmp.buffer property:***', (bmp.buffer[bufferKeys[0]]) );
+
+  console.log('Exposing values for all bmp.buffer properties:****', (bmp.buffer[bufferKeys]) );
 
   //TODO: alter bmp to make the image greyscale ...
 
@@ -75,7 +101,7 @@ function transformWithCallbacks() {
     bitmap.transform(operation);
 
     // Note that this has to be nested!
-    // Also, it uses the bitmap's instance properties for the name and thew new buffer
+    // Also, it uses the bitmap's instance properties for the name and the new buffer
     fs.writeFile(bitmap.newFile, bitmap.buffer, (err, out) => {
       if (err) {
         throw err;
@@ -87,9 +113,11 @@ function transformWithCallbacks() {
 }
 
 // TODO: Explain how this works (in your README)
-const [file, operation] = process.argv.slice(2);
+const [file, operation] = process.argv.slice(2); //If file is defined here, it will be used for the bitmap instance below. For example: If we run: node index.js ./assets/baldy.bmp invert , then file will be assigned: ./assets/baldy.bmp 
+//The same is true that operation will be assigned here. This will work in production, but in order to avoid in deployment, we should define our own constants
+//can a const be an array?
 
-let bitmap = new Bitmap(file);
+let bitmap = new Bitmap(file); //file is ./assets/baldy.bmp
 
 transformWithCallbacks();
 
