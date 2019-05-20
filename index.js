@@ -20,7 +20,8 @@ Bitmap.prototype.parse = function(buffer) {
   this.buffer = buffer;
   this.type = buffer.toString('utf-8', 0, 2);
   //... and so on
-  // console.log(`This represents buffer on Bitmap.parse: ${this.buffer}`); broken
+  // console.log(`This represents buffer on Bitmap.parse: ${this.buffer}`); //come back
+
 };
 
 /**
@@ -49,25 +50,47 @@ const transformGreyscale = (bmp) => {
 
   //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it. //How?
   var keys = Object.keys(bmp);
-  // for (let) i = 0; i < keys.length; i++){
-  //   let val = bmp[keys[i]];
-  // }
+ 
+  var bmpBuffer = bmp.buffer;
   var bufferKeys = Object.keys(bmp.buffer);
-
+  var bufferVals = Object.values(bmp.buffer);
   console.log('Exposing keys on bmp object:', keys);
   console.log('Exposing typeof for bmp file property:', (typeof bmp.file) );
-  // console.log('Exposing typeof for bmp file property:', (typeof bmp[keys[0]]) );
+ 
   console.log('Exposing typeof for bmp buffer property:', (typeof bmp.buffer) );
-  // console.log('Exposing typeof for bmp buffer property:', (typeof bmp[keys[1]]) );
+ 
   console.log('Exposing typeof for bmp type property:', (typeof bmp.type) );
-  // console.log('Exposing typeof for bmp type property:', (typeof bmp[keys[2]]) );
 
-  console.log('Exposing keys on bmp.buffer object:', bufferKeys);
+  console.log('Exposing keys on bmp.buffer OBJECT:', bufferKeys);
   console.log('Exposing typeof for keys on bmp.buffer:*', (typeof bufferKeys) );
-  console.log('Exposing typeof for first key on bmp.buffer:**', (typeof bmp.buffer[bufferKeys[0]]) );
-  console.log('Exposing value for first bmp.buffer property:***', (bmp.buffer[bufferKeys[0]]) );
 
-  console.log('Exposing values for all bmp.buffer properties:****', (bmp.buffer[bufferKeys]) );
+  // This breaks, which leads me to believe that it is an ArrayBuffer: console.log((bmp.buffer[bufferKeys.length] );
+  console.log('Exposing ***values on bmp.buffer ***OBJECT. I think these are CharCodes:', bufferVals);
+  // console.log('Exposing character codes for first six bytes of ArrayBuffer:', String.fromCharCode(bufferVals[0,6]));
+
+  let json = JSON.stringify(bmpBuffer);
+  console.log('Exposing JSON.stringify of bmpBuffer$$$:', json);
+  
+  // for (let i = 0; i <= bmpBuffer.length; i++){
+  //   while (i == 255){
+  //     let i = i + 100;
+  //   }
+  // }
+  // let buf = bmpBuffer.data.allocUnsafe(10);
+  // console.log('This is the allocUnsafe method', buf);
+  // console.log('What is this?', bmp.buffer);
+
+  // console.log('Exposing ArrayBuffer:', Buffer.from(bmp.buffer[1[15145]]));
+
+  // console.log('Exposing ArrayBuffer:', Buffer.from(bmpBuffer);
+
+  console.log('Exposing bmp.buffer; should look like an ArrayBuffer object:', (bmpBuffer) );
+  // let workingbuffer = new ArrayBuffer(8);
+  // console.log('workingbuffer byte length:', workingbuffer.byteLength);
+
+  ArrayBuffer.transfer(bmp.buffer [8]);
+  
+  // console.log('Exposing length of ArrayBuffer object:', (bmp.buffer.length) );
 
   //TODO: alter bmp to make the image greyscale ...
 
